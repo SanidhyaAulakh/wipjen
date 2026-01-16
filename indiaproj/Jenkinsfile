@@ -30,7 +30,7 @@ pipeline {
     stage('Build the Docker Image') {
       steps {
         echo 'Building Docker Image'
-        sh 'cd indiaproj && docker build -t myjavaproj:1.0 .'
+        sh 'cd indiaproj && /usr/local/bin/docker build -t myjavaproj:1.0 .'
       }
     }
 
@@ -39,8 +39,8 @@ pipeline {
         echo 'Running Java Application'
         sh '''
           cd indiaproj
-          docker rm -f myjavaproj-container || true
-          docker run --name myjavaproj-container myjavaproj:1.0
+          /usr/local/bin/docker rm -f myjavaproj-container || true
+          /usr/local/bin/docker run --name myjavaproj-container myjavaproj:1.0
         '''
       }
     }
