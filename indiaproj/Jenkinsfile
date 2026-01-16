@@ -30,7 +30,11 @@ pipeline {
     stage('Build the Docker Image') {
       steps {
         echo 'Building Docker Image'
-        sh 'cd indiaproj && /usr/local/bin/docker build -t myjavaproj:1.0 .'
+        sh '''
+          export PATH=$PATH:/usr/local/bin
+          cd indiaproj
+          /usr/local/bin/docker build -t myjavaproj:1.0 .
+        '''
       }
     }
 
