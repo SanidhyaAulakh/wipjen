@@ -7,24 +7,15 @@ pipeline {
   }
 
   stages {
-    stage('Checkout Code') {
-      steps {
-        echo 'Pulling from Github'
-        git branch: 'main',
-            credentialsId: 'git',
-            url: 'https://github.com/SanidhyaAulakh/wipjen.git'
-      }
-    }
-
     stage('Test Code') {
       steps {
         echo 'JUNIT Test case execution started'
-        sh 'mvn clean test'
+        sh 'cd indiaproj && mvn clean test'
       }
       post {
         always {
           junit '**/target/surefire-reports/*.xml'
-          echo 'Test Run is SUCCESSFUL!'
+          echo 'Test stage completed.'
         }
       }
     }
@@ -32,14 +23,14 @@ pipeline {
     stage('Build Project') {
       steps {
         echo 'Building Java project'
-        sh 'mvn clean package -DskipTests'
+        sh 'cd indiaproj && mvn clean package -DskipTests'
       }
     }
 
     stage('Build the Docker Image') {
       steps {
         echo 'Building Docker Image'
-        sh 'docker build -t myjavaproj:1.0 .'
+        sh 'cd indiaproj && docker build -t myjavaproj:1.0 .'
       }
     }
 
@@ -47,6 +38,7 @@ pipeline {
       steps {
         echo 'Running Java Application'
         sh '''
+          cd indiaproj
           docker rm -f myjavaproj-container || true
           docker run --name myjavaproj-container myjavaproj:1.0
         '''
